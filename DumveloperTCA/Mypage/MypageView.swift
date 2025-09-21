@@ -33,18 +33,34 @@ struct MypageView: View {
     }
     
     var body: some View {
-        ZStack {
-            Color.black.ignoresSafeArea()
-            VStack {
-                ForEach(MypageItem.allCases, id: \.self) { item in
-                    listItems(item: item)
+        NavigationStackStore(store.scope(state: \.path, action: \.path)) {
+            ZStack {
+                Color.black.ignoresSafeArea()
+                
+                VStack {
+                    ForEach(MypageItem.allCases, id: \.self) { item in
+                        listItems(item: item)
+                    }
                 }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
-        }
-        .onAppear {
-            guard let firstUser else { return }
-            store.send(.onAppear(firstUser))
+            .onAppear {
+                guard let firstUser else { return }
+                store.send(.onAppear(firstUser))
+            }
+        } destination: { store in
+            switch store.state {
+            case let .name(state):
+                if let store = store.scope(state: \.name, action: \.name) {
+                    EditNameView(store: store)
+                }
+            case let .email(state):
+                EmptyView()
+            case let .image(state):
+                EmptyView()
+            @unknown default:
+                EmptyView()
+            }
         }
     }
     
