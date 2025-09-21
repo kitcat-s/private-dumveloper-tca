@@ -10,6 +10,7 @@ import ComposableArchitecture
 @Reducer
 struct EditEmailReducer {
     struct State {
+        var email: String
     }
     
     enum Action {

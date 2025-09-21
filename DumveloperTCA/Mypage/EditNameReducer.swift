@@ -11,6 +11,7 @@ import SwiftUI
 @Reducer
 struct EditNameReducer {
     struct State {
+        var name: String
     }
     
     enum Action {

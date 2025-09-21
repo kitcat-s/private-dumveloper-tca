@@ -42,6 +42,7 @@ struct MypageReducer {
     enum Action {
         case onAppear(User)
         case path(StackActionOf<MypageStackReducer>)
+        case tapItem(MypageItem)
     }
     
     var body: some Reducer<State, Action> {
@@ -50,6 +51,16 @@ struct MypageReducer {
             case let .onAppear(user):
                 state.userName = user.name
                 state.userEmail = user.email
+                return Effect.none
+            case let .tapItem(item):
+                switch item {
+                case .name:
+                    state.path.append(.name(.init(name: state.userName)))
+                case .email:
+                    state.path.append(.email(.init(email: state.userEmail)))
+                case .image:
+                    state.path.append(.image(.init()))
+                }
                 return Effect.none
             case let .path(stackAction):
                 return Effect.none

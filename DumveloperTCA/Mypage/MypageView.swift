@@ -66,7 +66,7 @@ struct MypageView: View {
     
     func listItems(item: MypageItem) -> some View {
         Button {
-            
+            store.send(.tapItem(item))
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
