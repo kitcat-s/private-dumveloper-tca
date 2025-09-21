@@ -26,6 +26,7 @@ enum MypageItem: CaseIterable {
 
 struct MypageView: View {
     @Query var users: [User]
+    @Bindable var store: StoreOf<MypageReducer>
     
     var firstUser: User? {
         users.first
@@ -40,6 +41,10 @@ struct MypageView: View {
                 }
             }
             .padding(.horizontal)
+        }
+        .onAppear {
+            guard let firstUser else { return }
+            store.send(.onAppear(firstUser))
         }
     }
     
@@ -69,5 +74,10 @@ struct MypageView: View {
 }
 
 #Preview {
-    MypageView()
+    MypageView(
+        store: Store(
+            initialState: MypageReducer.State(),
+            reducer: { MypageReducer() }
+        )
+    )
 }

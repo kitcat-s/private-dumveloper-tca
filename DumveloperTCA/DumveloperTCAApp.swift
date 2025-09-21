@@ -7,12 +7,13 @@
 
 import SwiftUI
 import SwiftData
+import ComposableArchitecture
 
 @main
 struct DumveloperTCAApp: App {
     var body: some Scene {
         WindowGroup {
-            MypageView()
+            MypageView(store: Store(initialState: MypageReducer.State(), reducer: { MypageReducer() }))
         }
         .modelContainer(modelContainer)
     }
