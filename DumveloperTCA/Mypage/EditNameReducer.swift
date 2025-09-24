@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import SwiftUI
+import SwiftData
 
 @Reducer
 struct EditNameReducer {
@@ -19,6 +20,7 @@ struct EditNameReducer {
         case inputName(String)
         case clearText
         case onEditFailure(String)
+        case onEditSuccess(String)
     }
     
     var body: some Reducer<State, Action> {
@@ -33,6 +35,9 @@ struct EditNameReducer {
             case let .onEditFailure(message):
                 print(message)
                 return .none
+            case let .onEditSuccess(name):
+                print(name)
+                return .none
             }
         }
     }
@@ -40,6 +45,9 @@ struct EditNameReducer {
 
 struct EditNameView: View {
     @Bindable var store: StoreOf<EditNameReducer>
+    @Environment(\.modelContext) private var context
+    @Query private var users: [User]
+    private var user: User? { users.first }
     
     var body: some View {
         VStack {
@@ -82,6 +90,15 @@ struct EditNameView: View {
         guard !name.isEmpty else {
             store.send(.onEditFailure("이름이 입력되지 않았어요"))
             return
+        }
+        
+        user?.name = name
+        
+        do {
+            try context.save()
+            store.send(.onEditSuccess(name))
+        } catch let error {
+            store.send(.onEditFailure("저장에 실패했어요: \(error)"))
         }
     }
 }
