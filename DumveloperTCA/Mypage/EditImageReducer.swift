@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import SwiftUI
 
 @Reducer
 struct EditImageReducer {
@@ -13,5 +14,13 @@ struct EditImageReducer {
     }
     
     enum Action {
+    }
+}
+
+struct EditImageView: View {
+    @Bindable var store: StoreOf<EditImageReducer>
+    
+    var body: some View {
+        Text("EditImageView")
     }
 }

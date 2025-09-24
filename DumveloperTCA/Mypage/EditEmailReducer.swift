@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import SwiftUI
 
 @Reducer
 struct EditEmailReducer {
@@ -14,5 +15,13 @@ struct EditEmailReducer {
     }
     
     enum Action {
+    }
+}
+
+struct EditEmailView: View {
+    @Bindable var store: StoreOf<EditEmailReducer>
+    
+    var body: some View {
+        Text("EditEmailView")
     }
 }
