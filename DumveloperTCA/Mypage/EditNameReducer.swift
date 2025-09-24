@@ -18,6 +18,23 @@ struct EditNameReducer {
     enum Action {
         case inputName(String)
         case clearText
+        case onEditFailure(String)
+    }
+    
+    var body: some Reducer<State, Action> {
+        Reduce { state, action in
+            switch action {
+            case let .inputName(name):
+                state.name = name
+                return .none
+            case .clearText:
+                state.name = ""
+                return .none
+            case let .onEditFailure(message):
+                print(message)
+                return .none
+            }
+        }
     }
 }
 
@@ -45,7 +62,7 @@ struct EditNameView: View {
                 .background(Color(.systemGray6))
                 .cornerRadius(8)
                 .onSubmit {
-                    
+                    editName(name: store.name)
                 }
         }
         .navigationTitle("이름 변경")
@@ -53,11 +70,18 @@ struct EditNameView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    
+                    editName(name: store.name)
                 } label: {
                     Text("저장")
                 }
             }
+        }
+    }
+    
+    func editName(name: String) {
+        guard !name.isEmpty else {
+            store.send(.onEditFailure("이름이 입력되지 않았어요"))
+            return
         }
     }
 }
