@@ -40,7 +40,6 @@ struct EditNameReducer {
                 state.name = ""
                 return .none
             case let .onEditFailure(message):
-                print(message)
                 return .send(.showAlert(message))
             case let .showAlert(message):
                 state.alert = .init(title: {
@@ -111,6 +110,7 @@ struct EditNameView: View {
                 }
             }
         }
+        .alert($store.scope(state: \.alert, action: \.alert))
     }
     
     func editName(name: String) {
