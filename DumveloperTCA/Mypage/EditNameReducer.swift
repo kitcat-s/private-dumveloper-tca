@@ -14,6 +14,7 @@ struct EditNameReducer {
     @ObservableState
     struct State {
         var name: String
+        @Presents var alert: AlertState<Action.AlertAction>?
     }
     
     enum Action {
@@ -21,6 +22,12 @@ struct EditNameReducer {
         case clearText
         case onEditFailure(String)
         case onEditSuccess(String)
+        case showAlert(String)
+        case alert(PresentationAction<AlertAction>)
+        
+        enum AlertAction {
+            
+        }
     }
     
     var body: some Reducer<State, Action> {
@@ -34,12 +41,32 @@ struct EditNameReducer {
                 return .none
             case let .onEditFailure(message):
                 print(message)
+                return .send(.showAlert(message))
+            case let .showAlert(message):
+                state.alert = .init(title: {
+                    TextState("에러")
+                }, actions: {
+                    ButtonState {
+                        TextState("확인")
+                    }
+                }, message: {
+                    TextState(message)
+                })
                 return .none
             case let .onEditSuccess(name):
                 print(name)
                 return .none
+            case let .alert(presentationAction):
+                switch presentationAction {
+                case let .presented(action):
+                    print(action)
+                    return .none
+                case .dismiss:
+                    return .none
+                }
             }
         }
+        .ifLet(\.$alert, action: \.alert)
     }
 }
 
