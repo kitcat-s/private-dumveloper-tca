@@ -39,7 +39,12 @@ struct MypageView: View {
                 
                 VStack {
                     ForEach(MypageItem.allCases, id: \.self) { item in
-                        listItems(item: item)
+                        let content = switch item {
+                        case .name: store.userName
+                        case .email: store.userEmail
+                        case .image: ""
+                        }
+                        listItems(item: item, content: content)
                     }
                 }
                 .padding(.horizontal)
@@ -68,7 +73,7 @@ struct MypageView: View {
         }
     }
     
-    func listItems(item: MypageItem) -> some View {
+    func listItems(item: MypageItem, content: String) -> some View {
         Button {
             store.send(.tapItem(item))
         } label: {
@@ -78,7 +83,7 @@ struct MypageView: View {
                         .font(.headline)
                         .foregroundStyle(.white)
                     
-                    Text(firstUser?.name ?? "")
+                    Text(content)
                         .font(.body)
                         .foregroundStyle(Color(.lightGray))
                 }
